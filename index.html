@@ -4853,10 +4853,14 @@
 </html>`;
             const blob = new Blob([instructionsHtml], { type: 'text/html;charset=utf-8' });
             const url = URL.createObjectURL(blob);
-            const newWin = window.open(url, '_blank', 'noopener');
-            if (!newWin) {
+            const newWin = window.open(url, '_blank');
+            if (newWin) {
+                newWin.opener = null;
+            } else {
+                URL.revokeObjectURL(url);
                 const winFallback = window.open('', '_blank');
                 if (winFallback) {
+                    winFallback.opener = null;
                     winFallback.document.open();
                     winFallback.document.write(instructionsHtml);
                     winFallback.document.close();
